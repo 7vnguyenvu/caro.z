@@ -1,0 +1,192 @@
+@import url("./fonts/rubik/stylesheet.css");
+@import url("./fonts/lexend/stylesheet.css");
+
+:root {
+    --col-width: 2.1875rem;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    font-family: "Rubik Doodle Shadow";
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.tilte {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+/* ################################################################# ACTION */
+.action {
+    width: calc(var(--col-width) * 15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.action > * {
+    flex: 1;
+}
+
+.action .type {
+    display: flex;
+    gap: 12px;
+}
+
+.action .type > * {
+    font-family: "Lexend";
+    font-weight: 900;
+    color: white;
+    padding: 4px 12px;
+    background-color: #272727;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.action .type .active {
+    background-color: #7deac6;
+    cursor: default;
+}
+
+.action .button {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.action .button .turn {
+    font-family: "Lexend";
+    font-weight: 900;
+    font-size: 20px;
+    color: black;
+    padding: 0 12px;
+}
+
+.refresh {
+    padding: 2px;
+    cursor: pointer;
+}
+
+.tilte:active,
+.refresh:active {
+    scale: 0.9 0.9;
+    cursor: default;
+}
+
+/* ################################################################# GAME BOARD */
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(15, var(--col-width));
+    grid-template-rows: repeat(19, var(--col-width));
+    gap: 2px;
+    border: 2px solid #eee;
+    background-color: #eee;
+}
+
+.cell {
+    width: var(--col-width);
+    height: var(--col-width);
+    line-height: var(--col-width);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.cell.seeing,
+.cell.seeing:hover {
+    background-color: #fff6b3;
+}
+
+.cell.moved,
+.cell.moved:hover {
+    background-color: #ceffb3;
+}
+
+.cell:hover {
+    background-color: #e3e3e3;
+}
+
+/* ################################################################# GAME STOP */
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-color: #272727;
+    opacity: 0.5;
+}
+
+.box {
+    font-family: "Lexend";
+    font-weight: 900;
+    color: #ffffff;
+    height: 25%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    background-color: #959bdb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+}
+
+.box > * {
+    width: calc(var(--col-width) * 15);
+    text-align: center;
+}
+
+.box > *:first-child {
+    font-size: calc(var(--col-width) * 1.2);
+    padding: 8px 0;
+    border-bottom: 2px solid #412492;
+}
+
+.box > *:last-child {
+    font-size: calc(var(--col-width) * 0.6);
+    display: flex;
+    justify-content: space-around;
+    padding: 0 12px;
+    gap: 8px;
+}
+
+.box > *:last-child > * {
+    flex: 1;
+    padding: 8px 0;
+    border-radius: 8px;
+    background-color: #412492;
+    color: #ffffff;
+    text-decoration: none;
+}
