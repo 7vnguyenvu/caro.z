@@ -3,6 +3,8 @@ const boardYSize = 19; // Size Height of the board
 let board = []; // Initialize game board
 let currentPlayer = "X"; // Starting player
 let selectedCell = null;
+let movesHistory = []; // Store moves history
+const undoButton = document.querySelector(".undo");
 
 const tilte = document.querySelector(`.tilte`);
 const namepage = document.querySelector(`.tilte .name`);
@@ -32,6 +34,10 @@ function initializeBoard() {
             board[j][i] = "";
         }
     }
+
+    movesHistory = [];
+    undoButton.style.display = "none";
+    undoButton.removeEventListener("click", undoMove);
 }
 
 function renderBoard() {
@@ -78,6 +84,9 @@ function handleCellClick(row, col) {
             makeMove(row, col);
             selectedCell = null;
             cell.classList.remove("seeing");
+            undoButton.removeEventListener("click", undoMove);
+            undoButton.addEventListener("click", undoMove);
+            undoButton.style.display = "block";
         }
     }
 }
@@ -87,6 +96,10 @@ function makeMove(row, col) {
     const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
 
     if (isValidMove(row, col)) {
+        const move = { row, col, player: currentPlayer }; // Save board state
+        movesHistory.push(move); // Save the move to history
+        console.log(movesHistory);
+
         // Xóa class "moved" khỏi ô hiện tại nếu có
         const movedCells = document.querySelectorAll(".cell.moved");
         movedCells.forEach((movedCell) => {
@@ -108,6 +121,35 @@ function makeMove(row, col) {
         currentPlayer = currentPlayer === "X" ? "O" : "X";
         turn.innerText = `Lượt của: ${currentPlayer}`;
     }
+}
+
+function undoMove() {
+    const lastMove = movesHistory.pop();
+
+    if (movesHistory.length === 0) {
+        undoButton.style.display = "none";
+        undoButton.removeEventListener("click", undoMove);
+    }
+
+    board[lastMove.row][lastMove.col] = ""; // Đặt lại giá trị của ô trên bàn cờ
+
+    const cell = document.querySelector(`.cell[data-row="${lastMove.row}"][data-col="${lastMove.col}"]`);
+    cell.innerHTML = ""; // Xóa hiển thị của ô trên giao diện
+
+    currentPlayer = lastMove.player; // Cập nhật lại currentPlayer với người chơi trước đó
+
+    // Xóa class "moved" khỏi ô undo
+    const movedCell = document.querySelector(".cell.moved");
+    movedCell.classList.remove("moved");
+
+    currentPlayer = lastMove.player;
+    turn.innerText = `Lượt của: ${currentPlayer}`;
+
+    // Thêm class "moved" vào ô trước ô undo
+    const movedPrevCell = document.querySelector(
+        `.cell[data-row="${movesHistory[movesHistory.length - 1].row}"][data-col="${movesHistory[movesHistory.length - 1].col}"]`
+    );
+    movedPrevCell.classList.add("moved");
 }
 
 // Handle wins
