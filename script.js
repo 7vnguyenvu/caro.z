@@ -13,14 +13,16 @@ tilte.addEventListener("click", function () {
     location.reload();
 });
 
-const refresh = document.querySelector(`.refresh`);
-refresh.addEventListener("click", function () {
+function refresh() {
     currentPlayer = "X";
     namepage.innerText = "CARO.Z";
     turn.innerText = `Lượt của: ${currentPlayer}`;
     initializeBoard();
     renderBoard();
-});
+}
+
+const refreshbtn = document.querySelector(`.refresh`);
+refreshbtn.addEventListener("click", refresh);
 
 // Render
 function initializeBoard() {
@@ -123,11 +125,21 @@ function announceWinner(player) {
     box.innerHTML = `
         <span class="box__title">Trận đấu đã kết thúc</span>
         <div class="box__button">
-            <a href="/">&gt; CARO.Z &lt;</a>
+            <span onclick="endtostart()" >▶ CARO.Z ◀</span>
             <!-- <span>Tiếp trận nữa!</span> -->
         </div>`;
     document.body.appendChild(overlay);
     document.body.appendChild(box);
+}
+
+function endtostart() {
+    const overlay = document.querySelector(".overlay");
+    const box = document.querySelector(".box");
+    if (overlay && box) {
+        overlay.remove();
+        box.remove();
+    }
+    refresh();
 }
 
 function checkWinner(row, col, player) {
