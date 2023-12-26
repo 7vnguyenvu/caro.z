@@ -161,6 +161,7 @@ function announceWinner(player, row, col, direction) {
     const box = document.createElement("div");
     overlay.classList.add("overlay");
     box.classList.add("box");
+    box.classList.add(`box-${player}`);
     box.innerHTML = `
         <span class="box__title">Trận đấu đã kết thúc</span>
         <div class="box__button">
