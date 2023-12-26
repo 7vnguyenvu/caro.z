@@ -98,6 +98,7 @@ body {
 
 /* ################################################################# GAME BOARD */
 .game-board {
+    margin: 10px auto 50px;
     display: grid;
     grid-template-columns: repeat(15, var(--col-width));
     grid-template-rows: repeat(19, var(--col-width));
