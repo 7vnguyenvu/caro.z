@@ -36,6 +36,9 @@ function renderBoard() {
     const gameBoard = document.querySelector(".game-board");
     gameBoard.innerHTML = "";
 
+    const audio = new Audio();
+    audio.src = "./sounds/click.mp3";
+
     for (let j = 0; j < boardYSize; j++) {
         for (let i = 0; i < boardXSize; i++) {
             const cell = document.createElement("div");
@@ -46,6 +49,7 @@ function renderBoard() {
             cell.innerText = board[j][i];
 
             cell.addEventListener("click", function () {
+                audio.play();
                 handleCellClick(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
             });
 
