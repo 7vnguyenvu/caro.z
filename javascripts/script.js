@@ -102,9 +102,6 @@ function makeMove(row, col) {
         cell.classList.add("moved");
 
         if (checkWinner(row, col, currentPlayer)) {
-            // initializeBoard();
-            // renderBoard();
-            // alert(currentPlayer + " wins!");
             return;
         }
 
@@ -114,7 +111,7 @@ function makeMove(row, col) {
 }
 
 // Handle wins
-function announceWinner(player) {
+function announceWinner(player, row, col, direction) {
     const message = player + " - wins!";
     namepage.innerText = message;
 
@@ -130,6 +127,101 @@ function announceWinner(player) {
         </div>`;
     document.body.appendChild(overlay);
     document.body.appendChild(box);
+
+    highlightWinningLine(player, row, col, direction);
+}
+
+function highlightWinningLine(player, row, col, direction) {
+    const cellsToHighlight = []; // Mảng lưu trữ các ô trên đường chiến thắng
+    cellsToHighlight.push(document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`));
+
+    // Logic để xác định các ô trên đường chiến thắng dựa vào hướng và tọa độ xuất phát
+    if (direction === "horizontal") {
+        const right = col + 1;
+        for (let i = right; i < boardXSize; i++) {
+            if (board[row][i] === player) {
+                cellsToHighlight.push(document.querySelector(`.cell[data-row="${row}"][data-col="${i}"]`));
+            } else {
+                break;
+            }
+        }
+        const left = col - 1;
+        for (let i = 0; i <= left; i++) {
+            if (board[row][left - i] === player) {
+                cellsToHighlight.push(document.querySelector(`.cell[data-row="${row}"][data-col="${left - i}"]`));
+            } else {
+                break;
+            }
+        }
+    } else if (direction === "vertical") {
+        const down = row + 1;
+        for (let i = down; i < boardYSize; i++) {
+            if (board[i][col] === player) {
+                cellsToHighlight.push(document.querySelector(`.cell[data-row="${i}"][data-col="${col}"]`));
+            } else {
+                break;
+            }
+        }
+        const up = row - 1;
+        for (let i = 0; i <= up; i++) {
+            if (board[up - i][col] === player) {
+                cellsToHighlight.push(document.querySelector(`.cell[data-row="${up - i}"][data-col="${col}"]`));
+            } else {
+                break;
+            }
+        }
+    } else if (direction === "rightDiagonal") {
+        let i = row + 1;
+        let j = col + 1;
+        while (i < boardYSize && j < boardXSize) {
+            if (board[i][j] === player) {
+                cellsToHighlight.push(document.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`));
+            } else {
+                break;
+            }
+            i++;
+            j++;
+        }
+        i = row - 1;
+        j = col - 1;
+        while (i >= 0 && j >= 0) {
+            if (board[i][j] === player) {
+                cellsToHighlight.push(document.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`));
+            } else {
+                break;
+            }
+            i--;
+            j--;
+        }
+    } else if (direction === "leftDiagonal") {
+        let i = row + 1;
+        let j = col - 1;
+        while (i < boardYSize && j >= 0) {
+            if (board[i][j] === player) {
+                cellsToHighlight.push(document.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`));
+            } else {
+                break;
+            }
+            i++;
+            j--;
+        }
+        i = row - 1;
+        j = col + 1;
+        while (i >= 0 && j < boardXSize) {
+            if (board[i][j] === player) {
+                cellsToHighlight.push(document.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`));
+            } else {
+                break;
+            }
+            i--;
+            j++;
+        }
+    }
+
+    // Gán class 'winning-cell' cho các ô trên đường chiến thắng
+    cellsToHighlight.forEach((cell) => {
+        cell.classList.add(`winning-cell-${player}`);
+    });
 }
 
 function endtostart() {
@@ -148,14 +240,26 @@ function checkWinner(row, col, player) {
     const rightDiagonal = getRightDiagonal(row, col, player);
     const leftDiagonal = getLeftDiagonal(row, col, player);
 
-    const isWinner = horizontal >= 5 || vertical >= 5 || rightDiagonal >= 5 || leftDiagonal >= 5;
+    const isHorizontalWin = horizontal >= 5;
+    const isVerticalWin = vertical >= 5;
+    const isRightDiagonalWin = rightDiagonal >= 5;
+    const isLeftDiagonalWin = leftDiagonal >= 5;
 
-    if (isWinner) {
-        // gắn cờ cho các đường win để hiện lên theo màu win của player
-        announceWinner(player);
+    if (isHorizontalWin || isVerticalWin || isRightDiagonalWin || isLeftDiagonalWin) {
+        // Xác định hướng chiến thắng từ các biến boolean
+        if (isHorizontalWin) {
+            announceWinner(player, row, col, "horizontal");
+        } else if (isVerticalWin) {
+            announceWinner(player, row, col, "vertical");
+        } else if (isRightDiagonalWin) {
+            announceWinner(player, row, col, "rightDiagonal");
+        } else if (isLeftDiagonalWin) {
+            announceWinner(player, row, col, "leftDiagonal");
+        }
+        return true; // Có người chiến thắng
     }
 
-    return isWinner;
+    return false;
 }
 
 function getHorizontal(y, x, player) {
