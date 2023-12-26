@@ -101,7 +101,6 @@ body {
     display: grid;
     grid-template-columns: repeat(15, var(--col-width));
     grid-template-rows: repeat(19, var(--col-width));
-    gap: 1px;
     border: 1px solid #e5e5e5;
     background-color: #e5e5e5;
 }
@@ -116,6 +115,11 @@ body {
     font-size: 16px;
     cursor: pointer;
     background-color: #fff;
+    border: thin solid #eee;
+}
+
+.cell img {
+    width: 22px !important;
 }
 
 .cell.seeing,
@@ -194,13 +198,48 @@ body {
     cursor: pointer;
 }
 
-/* Điều chỉnh CSS cho màn hình bé hơn hoặc bằng 768px */
 @media only screen and (max-width: 768px) {
     :root {
-        --col-width: 1.9rem !important;
+        --col-width: 2rem !important;
     }
 
     .game-board {
-        gap: 1px;
+        margin: 40px;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    :root {
+        --col-width: 1.8rem !important;
+    }
+}
+
+@media only screen and (max-width: 435px) {
+    :root {
+        --col-width: 1.5rem !important;
+    }
+
+    .cell img {
+        width: 16px !important;
+    }
+}
+
+@media only screen and (max-width: 365px) {
+    :root {
+        --col-width: 1.4rem !important;
+    }
+}
+
+@media only screen and (max-width: 340px) {
+    :root {
+        --col-width: 1.25rem !important;
+    }
+
+    .action .type {
+        font-size: 16px;
+    }
+
+    .action .button .turn {
+        font-size: 14px;
     }
 }
