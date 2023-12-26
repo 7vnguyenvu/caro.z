@@ -18,20 +18,19 @@ html {
 }
 
 body {
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     position: relative;
     font-family: "Rubik Doodle Shadow";
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 }
 
 .tilte {
     display: flex;
     gap: 16px;
-    margin-top: 12px;
+    margin-top: 24px;
     margin-bottom: 10px;
     cursor: pointer;
 }
@@ -102,9 +101,9 @@ body {
     display: grid;
     grid-template-columns: repeat(15, var(--col-width));
     grid-template-rows: repeat(19, var(--col-width));
-    gap: 2px;
-    border: 2px solid #eee;
-    background-color: #eee;
+    gap: 1px;
+    border: 1px solid #e5e5e5;
+    background-color: #e5e5e5;
 }
 
 .cell {
@@ -120,18 +119,21 @@ body {
 }
 
 .cell.seeing,
-.cell.seeing:hover {
-    background-color: #fff6b3;
+.cell.moved {
+    background-color: #ffeaa7;
 }
 
-.cell.moved,
-.cell.moved:hover {
-    background-color: #ceffb3;
+.cell.seeing:active {
+    cursor: default;
 }
 
-.cell:hover {
+.cell.moved:active {
+    cursor: pointer;
+}
+
+/* .cell:hover {
     background-color: #e3e3e3;
-}
+} */
 
 /* ################################################################# GAME STOP */
 .overlay {
@@ -189,4 +191,16 @@ body {
     background-color: #412492;
     color: #ffffff;
     text-decoration: none;
+    cursor: pointer;
+}
+
+/* Điều chỉnh CSS cho màn hình bé hơn hoặc bằng 768px */
+@media only screen and (max-width: 768px) {
+    :root {
+        --col-width: 1.9rem !important;
+    }
+
+    .game-board {
+        gap: 1px;
+    }
 }
