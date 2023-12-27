@@ -49,6 +49,7 @@ body {
 }
 
 .action .type {
+    flex: 2;
     display: flex;
     gap: 12px;
 }
@@ -69,6 +70,7 @@ body {
 }
 
 .action .button {
+    flex: 3;
     width: 34px;
     height: 34px;
     display: flex;
@@ -78,11 +80,12 @@ body {
 }
 
 .action .button .turn {
+    flex: 1;
     font-family: "Lexend";
     font-weight: 900;
     font-size: 20px;
     color: black;
-    padding: 0 12px;
+    /* padding: 0 12px; */
 }
 
 .action .button > *:last-child {
