@@ -152,11 +152,16 @@ body {
 }
 
 .winning-cell-X {
-    background-color: #ccd9f2 !important;
+    background-color: #3174c8 !important;
 }
 
 .winning-cell-O {
-    background-color: #f2cccc !important;
+    background-color: #ea576c !important;
+}
+
+.winning-cell-X img,
+.winning-cell-O img {
+    filter: brightness(0) invert(1);
 }
 
 /* ################################################################# GAME STOP */
