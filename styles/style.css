@@ -52,6 +52,7 @@ body {
     flex: 2;
     display: flex;
     gap: 12px;
+    position: relative;
 }
 
 .action .type > * {
@@ -66,7 +67,48 @@ body {
 
 .action .type .active {
     background-color: #7deac6;
-    cursor: default;
+}
+
+.action .type .choose {
+    background-color: transparent;
+    width: 170px;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 8px;
+    border-radius: 4px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action .type .choose > * {
+    flex: 1;
+    border-radius: 4px;
+    padding: 8px 16px;
+    background-color: #272727;
+}
+
+.action .type .choose > *:hover {
+    background-color: #111111;
+}
+
+.action .type .choose .setup {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 30%;
+    background-color: transparent;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action .type .choose .setup > * {
+    flex: 1;
+    border-radius: 4px;
+    background-color: #2674f0;
+    padding: 8px 16px;
 }
 
 .action .button {
@@ -150,13 +192,17 @@ body {
 .cell.moved:active {
     cursor: pointer;
 }
-
 .winning-cell-X {
-    background-color: #ccd9f2 !important;
+    background-color: #3174c8 !important;
 }
 
 .winning-cell-O {
-    background-color: #f2cccc !important;
+    background-color: #ea576c !important;
+}
+
+.winning-cell-X img,
+.winning-cell-O img {
+    filter: brightness(0) invert(1);
 }
 
 /* ################################################################# GAME STOP */

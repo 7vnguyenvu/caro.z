@@ -1,32 +1,124 @@
+const MAX_DEPTH = 4; // Độ sâu tối đa của thuật toán Minimax
 const boardXSize = 15; // Size Wide of the board
 const boardYSize = 19; // Size Height of the board
 const click = new Audio();
 const win = new Audio();
-let board = []; // Initialize game board
-let currentPlayer = "X"; // Starting player
-let selectedCell = null;
-let movesHistory = []; // Store moves history
 
+let board = []; // Initialize game board
+let isFree = true;
+let isWithAI = false;
+let isAIturn = false;
+let aiChoose = "X";
+let currentPlayer = "X";
+let selectedCell = null;
+let movesHistory = [];
+let showtype = false;
+
+const choose = document.querySelector(".type .choose");
+const stateActive = document.querySelector(".active");
 const undoButton = document.querySelector(".undo");
 const tilte = document.querySelector(`.tilte`);
 const namepage = document.querySelector(`.tilte .name`);
 const turn = document.querySelector(`.button .turn`);
 turn.innerText = `Lượt của: ${currentPlayer}`;
 
+stateActive.addEventListener("click", function () {
+    showtype = !showtype;
+
+    if (showtype) {
+        const free = document.createElement("span");
+        free.classList.add("free");
+        free.innerText = `👉 Tự do`;
+        free.addEventListener("click", function () {
+            stateActive.innerText = `Tự do ▼`;
+            refresh();
+            remove();
+        });
+
+        const withAI = document.createElement("span");
+        withAI.classList.add("withAI");
+        withAI.innerText = `👉 Chơi với máy`;
+        withAI.addEventListener("click", function () {
+            const setup = document.createElement("div");
+            setup.classList.add("setup");
+
+            const turnX = document.createElement("span");
+            const turnO = document.createElement("span");
+            turnX.classList.add("turnX");
+            turnO.classList.add("turnO");
+            turnX.innerText = `Máy - X`;
+            turnO.innerText = `Bạn - X`;
+            turnX.addEventListener("click", function () {
+                setupWith("X");
+            });
+            turnO.addEventListener("click", function () {
+                setupWith("O");
+            });
+
+            setup.appendChild(turnX);
+            setup.appendChild(turnO);
+            withAI.appendChild(setup);
+        });
+        choose.appendChild(free);
+        choose.appendChild(withAI);
+    } else {
+        remove();
+    }
+
+    function setupWith(type) {
+        stateActive.innerText = `Mode ▼`;
+        isFree = false;
+        isWithAI = true;
+        initializeBoard();
+        renderBoard();
+        switch (type) {
+            case "X":
+                currentPlayer = "X";
+                turn.innerText = `Máy - X`;
+                aiChoose = "X";
+                isAIturn = true;
+                remove();
+                makeMove(9, 7);
+                break;
+            case "O":
+                currentPlayer = "X";
+                turn.innerText = `Bạn - X`;
+                aiChoose = "O";
+                isAIturn = false;
+                remove();
+                break;
+        }
+    }
+
+    function remove() {
+        showtype = false;
+        choose.innerHTML = "";
+    }
+});
+
 tilte.addEventListener("click", function () {
     location.reload();
 });
 
+const refreshbtn = document.querySelector(`.refresh`);
+refreshbtn.addEventListener("click", refresh);
+
 function refresh() {
+    board = [];
+    isFree = true;
+    isWithAI = false;
+    isAIturn = false;
+    aiChoose = "X";
     currentPlayer = "X";
+    selectedCell = null;
+    movesHistory = [];
+    showtype = false;
+
     namepage.innerText = "CARO.Z";
     turn.innerText = `Lượt của: ${currentPlayer}`;
     initializeBoard();
     renderBoard();
 }
-
-const refreshbtn = document.querySelector(`.refresh`);
-refreshbtn.addEventListener("click", refresh);
 
 // Render
 function initializeBoard() {
@@ -59,8 +151,8 @@ function renderBoard() {
             cell.innerText = board[j][i];
 
             cell.addEventListener("click", function () {
-                handleCellClick(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
                 click.play();
+                handleCellClick(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
             });
 
             gameBoard.appendChild(cell);
@@ -71,6 +163,7 @@ function renderBoard() {
 function isValidMove(row, col) {
     return board[row][col] === "";
 }
+
 function handleCellClick(row, col) {
     const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
 
@@ -100,7 +193,6 @@ function makeMove(row, col) {
     if (isValidMove(row, col)) {
         const move = { row, col, player: currentPlayer }; // Save board state
         movesHistory.push(move); // Save the move to history
-        console.log(movesHistory);
 
         // Xóa class "moved" khỏi ô hiện tại nếu có
         const movedCells = document.querySelectorAll(".cell.moved");
@@ -122,7 +214,20 @@ function makeMove(row, col) {
         }
 
         currentPlayer = currentPlayer === "X" ? "O" : "X";
-        turn.innerText = `Lượt của: ${currentPlayer}`;
+        if (!isWithAI) {
+            // Chơi tự do
+            turn.innerText = `Lượt của: ${currentPlayer}`;
+        } else {
+            // Chơi với máy -> Chưa hoàn thiện
+            if (isAIturn) {
+                isAIturn = false;
+            } else {
+                isAIturn = true;
+                console.log(row, col);
+                const bestMove = getBestMove(row, col);
+                makeMove(bestMove.row, bestMove.col);
+            }
+        }
     }
 }
 
@@ -149,10 +254,11 @@ function undoMove() {
     turn.innerText = `Lượt của: ${currentPlayer}`;
 
     // Thêm class "moved" vào ô trước ô undo
-    const movedPrevCell = document.querySelector(
-        `.cell[data-row="${movesHistory[movesHistory.length - 1].row}"][data-col="${movesHistory[movesHistory.length - 1].col}"]`
-    );
-    movedPrevCell.classList.add("moved");
+    const movedPrevCell =
+        document.querySelector(
+            `.cell[data-row="${movesHistory[movesHistory.length - 1]?.row}"][data-col="${movesHistory[movesHistory.length - 1]?.col}"]`
+        ) ?? null;
+    movedPrevCell && movedPrevCell.classList.add("moved");
 }
 
 // Handle wins
