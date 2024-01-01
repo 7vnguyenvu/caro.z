@@ -1,11 +1,13 @@
 const boardXSize = 15; // Size Wide of the board
 const boardYSize = 19; // Size Height of the board
+const click = new Audio();
+const win = new Audio();
 let board = []; // Initialize game board
 let currentPlayer = "X"; // Starting player
 let selectedCell = null;
 let movesHistory = []; // Store moves history
-const undoButton = document.querySelector(".undo");
 
+const undoButton = document.querySelector(".undo");
 const tilte = document.querySelector(`.tilte`);
 const namepage = document.querySelector(`.tilte .name`);
 const turn = document.querySelector(`.button .turn`);
@@ -44,8 +46,8 @@ function renderBoard() {
     const gameBoard = document.querySelector(".game-board");
     gameBoard.innerHTML = "";
 
-    const audio = new Audio();
-    audio.src = "./sounds/click.mp3";
+    click.src = "./sounds/click.mp3";
+    win.src = "./sounds/win.mp3";
 
     for (let j = 0; j < boardYSize; j++) {
         for (let i = 0; i < boardXSize; i++) {
@@ -57,8 +59,8 @@ function renderBoard() {
             cell.innerText = board[j][i];
 
             cell.addEventListener("click", function () {
-                audio.play();
                 handleCellClick(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+                click.play();
             });
 
             gameBoard.appendChild(cell);
@@ -115,6 +117,7 @@ function makeMove(row, col) {
         cell.classList.add("moved");
 
         if (checkWinner(row, col, currentPlayer)) {
+            win.play();
             return;
         }
 
